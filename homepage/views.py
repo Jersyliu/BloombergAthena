@@ -77,7 +77,7 @@ def course(request, username, coursename, lessonname):
     CL = CourseLocation.objects.filter(newuser__username=username, course__course_name=coursename)
     l = Lesson.objects.filter(lesson_name=lessonname)
     if len(CL) == 0:
-        lesson = Lesson.objects.filter(course__course_name=coursename)[-1]
+        lesson = Lesson.objects.filter(course__course_name=coursename).order_by("id")[0]
         cl = CourseLocation(newuser=NewUser.objects.get(username=username), course=Course.objects.get(course_name=coursename), islessonornot=True, whichone=lesson.lesson_name)
         cl.save()
     elif CL[0].islessonornot == False and len(l) == 0:
