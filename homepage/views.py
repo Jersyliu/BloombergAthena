@@ -64,12 +64,16 @@ def courseList(request, username):
         news.append(i)
     for i in challengeP10:
         news.append(i)
-
     shuffle(news)
-    
+    easy = Course.objects.filter(level="easy")
+    medium = Course.objects.filter(level="medium")
+    hard = Course.objects.filter(level="hard")
     context = {
            "User":request.user,
            "CourseClass":Course.objects.all(),
+           "easy":easy,
+           "medium":medium,
+           "hard":hard,
            "whosOnline":whosOnline,
            "picture": NewUser.objects.get(username=username).picture,
            "score": NewUser.objects.get(username=username).score,
