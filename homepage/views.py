@@ -9,8 +9,7 @@ from django.utils import timezone
 
 from login.models import NewUser, Course, Lesson, Progress, Challenge, ChallengeProgress, CourseLocation
 
-
-
+from random import shuffle
 def get_all_logged_in_users():
     # Query all non-expired sessions
     # use timezone.now() instead of datetime.now() in latest versions of Django
@@ -57,19 +56,24 @@ def logoutuser(request):
     return HttpResponseRedirect(reverse('login:index'))
 
 def courseList(request, username):
-    '''
-    s = 'haha'
-    for i in request.session.keys():
-        s += str(i)+"  "+str(request.session[i])+"<br>"
-    return HttpResponse(s)
-    '''
     whosOnline = get_all_logged_in_users()
+    lessonP10 = Progress.objects.filter(is_complete=True)
+    challengeP10 = ChallengeProgress.objects.filter(is_complete=True)
+    news = []
+    for i in lessonP10:
+        news.append(i)
+    for i in challengeP10:
+        news.append(i)
+
+    shuffle(news)
+    
     context = {
            "User":request.user,
            "CourseClass":Course.objects.all(),
            "whosOnline":whosOnline,
            "picture": NewUser.objects.get(username=username).picture,
-           "score": NewUser.objects.get(username=username).score
+           "score": NewUser.objects.get(username=username).score,
+           "news":news
            }
     return render(request, 'homepage/courselist.html', context )
     
@@ -77,7 +81,7 @@ def course(request, username, coursename, lessonname):
     CL = CourseLocation.objects.filter(newuser__username=username, course__course_name=coursename)
     l = Lesson.objects.filter(lesson_name=lessonname)
     if len(CL) == 0:
-        lesson = Lesson.objects.filter(course__course_name=coursename).order_by("id")[0]
+        lesson = Lesson.objects.filter(course__course_name=coursename)[0]
         cl = CourseLocation(newuser=NewUser.objects.get(username=username), course=Course.objects.get(course_name=coursename), islessonornot=True, whichone=lesson.lesson_name)
         cl.save()
     elif CL[0].islessonornot == False and len(l) == 0:
