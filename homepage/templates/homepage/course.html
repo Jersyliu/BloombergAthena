@@ -29,7 +29,9 @@
     function toggleSidebar(el, other){
         other.style.backgroundColor= "darkorange";
         other.style.color = "white";
+        other.style.fontWeight = "300";
         el.style.backgroundColor = "#f9f9f9";
+        el.style.fontWeight = "900";
         el.style.color = "grey";
         if (el.name == 'qrs'){
             document.getElementById("who-pane").style.visibility = "hidden";
@@ -47,10 +49,16 @@
     </script>    
 </head>
 <body>
+    <buttun style="position:fixed; left:10px; bottom:10px;"><a style="text-decoration: none;" href="{% url 'homepage:courseList' User.username %}">Go Back To Courselist</a></buttun>
     <div class="titleAthena">
         <span><span class="format_logo"><img  src="{% static 'homepage/images/logo.png' %}"></span><span class="Course_Name">{{CourseName}}</span><span class="Lesson_Name">{{ loadlesson.challenge_name }}{{ loadlesson.lesson_name }}</span></span>
         <span class="helloUser">
-            Welcome, <a class="username" href="{% url 'homepage:profile' User.username %}">{{  User.username }}<img class="img-circle user_pic" src="{% static picture %}" style="height:32;width:32;"></a><span class="score">Score: <strong>{{score}}</strong></span>
+            <a class="username" href="{% url 'homepage:profile' User.username %}">
+                <table style="margin:0; padding: 0;">
+                    <tr style="margin:0; padding: 0;"><td style="margin:0; padding: 0; text-align: right; vertical-align: bottom;">Welcome, {{  User.username }}</td><td rowspan="2" style="margin-left: 5px; padding-left:5px;"><img class="img-circle user_pic" src="{% static picture %}" style="height:38;width:38;"></td></tr>
+                    <tr style="margin:0; padding: 0;"><td style="margin:0; padding: 0; text-align: right; vertical-align: top;">Score: <strong>{{score}}</strong></td></tr>
+                </table>
+            </a>
         </span>
     </div>
     <div class="page" id="page">
@@ -103,7 +111,7 @@
             <button class="sidebar_btn" name="who" onclick="toggleSidebar(this, document.getElementById('qrs'))" id= "who">Who's Online</button>        
             <p></p>
             <div id="qrs-pane">
-                <textarea id="notes" style="position:relative; height:84%; width:100%;">{{ TextNotes }}</textarea>
+                <textarea id="notes" style="position:relative; height:84%; width:100%; background-color: #ffe4c1; border: none; font-size: 18px;">{{ TextNotes }}</textarea>
             </div>
             <div id="who-pane">
                 <table class="online_user_table">
